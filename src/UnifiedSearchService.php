@@ -235,6 +235,7 @@ class UnifiedSearchService extends Service
      * @param string[] $options array of SEARCH_OPTION_*, the default is SEARCH_OPTION_CONSIDER_CROSSES + SEARCH_OPTION_IN_STOCK + SEARCH_OPTION_WITH_OFFERS
      * @param int $skip
      * @param int $limit
+     * @param int $indexedAutoId
      * @return SearchResult
      * @throws GuzzleException
      * @throws exceptions\AccessDeniedException
@@ -243,7 +244,7 @@ class UnifiedSearchService extends Service
      * @throws exceptions\NotFoundException
      * @throws exceptions\USException
      */
-    public function search(string $query, array $tags = [], array $options = [], int $skip = 0, int $limit = 0): SearchResult
+    public function search(string $query, array $tags = [], array $options = [], int $skip = 0, int $limit = 0, int $indexedAutoId = 0): SearchResult
     {
         if (!$options) {
             $options = [
@@ -261,6 +262,10 @@ class UnifiedSearchService extends Service
             'tagsByAnd' => in_array(self::SEARCH_TAGS_BY_AND, $options) ? 'true' : 'false',
             'query' => $query
         ];
+
+        if ($indexedAutoId) {
+            $searchParams['indexedAutoId'] = $indexedAutoId;
+        }
 
         if ($tags) {
             $searchParams['tags'] = $tags;
